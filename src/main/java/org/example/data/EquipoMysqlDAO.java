@@ -27,12 +27,7 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Equipo equipo = new Equipo();
-                    equipo.setId(rs.getLong("id"));
-                    equipo.setNombre(rs.getString("nombre"));
-                    equipo.setCategoria(rs.getString("categoria"));
-                    equipo.setDisponible(rs.getBoolean("disponible"));
-                    return Optional.ofNullable(equipo);
+                    return Optional.ofNullable(mapper(rs));
                 }
             }
         } catch (SQLException e) {
@@ -50,18 +45,16 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
              ResultSet rs = ps.executeQuery() )
         {
             while (rs.next()) {
-                Equipo equipo = new Equipo();
-                equipo.setId(rs.getLong("id"));
-                equipo.setNombre(rs.getString("nombre"));
-                equipo.setCategoria(rs.getString("categoria"));
-                equipo.setDisponible(rs.getBoolean("disponible"));
-                salida.add(equipo);
+                salida.add(mapper(rs));
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return salida;
     }
+
+
 
     @Override
     public Equipo save(Equipo entity) {
@@ -106,5 +99,28 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    public List<Equipo> findByNombre(String nombre) {
+        /* TODO */
+        return List.of();
+    }
+
+
+    public List<Equipo> findByEstado(Boolean status) {
+        /* TODO */
+        return List.of();
+    }
+
+    /* Helpers */
+
+    public static Equipo mapper(ResultSet rs) throws SQLException {
+        Equipo equipo = new Equipo();
+        equipo.setId(rs.getLong("id"));
+        equipo.setNombre(rs.getString("nombre"));
+        equipo.setCategoria(rs.getString("categoria"));
+        equipo.setDisponible(rs.getBoolean("disponible"));
+        return equipo;
     }
 }
