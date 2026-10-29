@@ -10,8 +10,8 @@ import java.util.Optional;
 public class EquipoMysqlDAO implements DAO<Equipo> {
 
     private String url = "jdbc:mysql://localhost:3307/ad";
-    private String user = "user";
-    private String pwd = "pwd";
+    private String user = System.getenv("USER");
+    private String pwd = System.getenv("PASSWORD");
 
     private String sqlQuery = "select * from equipo";
     private String sqlFindById = "select * from equipo where id = ?";
@@ -21,6 +21,9 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
 
     @Override
     public Optional<Equipo> findById(Long id) {
+        if( user==null || pwd==null ){
+            throw new RuntimeException("Usuario o Password no presente");
+        }
         try (Connection conn = DriverManager.getConnection(url, user, pwd);
              PreparedStatement ps = conn.prepareStatement(sqlFindById)) {
             ps.setLong(1, id);
