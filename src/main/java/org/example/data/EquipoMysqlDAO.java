@@ -5,6 +5,7 @@ import org.example.models.Equipo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EquipoMysqlDAO implements DAO<Equipo> {
 
@@ -19,7 +20,7 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
     private String sqlDelete = "delete from equipo where id = ?";
 
     @Override
-    public Equipo findById(Long id) {
+    public Optional<Equipo> findById(Long id) {
         try (Connection conn = DriverManager.getConnection(url, user, pwd);
              PreparedStatement ps = conn.prepareStatement(sqlFindById)) {
             ps.setLong(1, id);
@@ -31,13 +32,13 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
                     equipo.setNombre(rs.getString("nombre"));
                     equipo.setCategoria(rs.getString("categoria"));
                     equipo.setDisponible(rs.getBoolean("disponible"));
-                    return equipo;
+                    return Optional.ofNullable(equipo);
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
