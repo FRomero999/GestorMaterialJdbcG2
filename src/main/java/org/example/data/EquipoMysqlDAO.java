@@ -18,6 +18,8 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
     private String sqlInsert = "insert into equipo (nombre, categoria, disponible) values (?,?,?)";
     private String sqlUpdate = "update equipo set nombre = ?, categoria = ?, disponible = ? where id = ?";
     private String sqlDelete = "delete from equipo where id = ?";
+    private String sqlFindByNombre = "select * from equipo where nombre like ?";
+    private String sqlFindByEstado = "select * from equipo where disponible = ?";
 
     @Override
     public Optional<Equipo> findById(Long id) {
@@ -106,14 +108,41 @@ public class EquipoMysqlDAO implements DAO<Equipo> {
 
 
     public List<Equipo> findByNombre(String nombre) {
-        /* TODO */
-        return List.of();
+        List<Equipo> salida = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(url, user, pwd);
+             PreparedStatement ps = conn.prepareStatement(sqlFindByNombre)) {
+            ps.setString(1, "%" + nombre + "%");
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    salida.add(mapper(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return salida;
     }
 
 
     public List<Equipo> findByEstado(Boolean status) {
-        /* TODO */
-        return List.of();
+        if (status == null) {
+            return List.of();
+        }
+        List<Equipo> salida = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(url, user, pwd);
+             PreparedStatement ps = conn.prepareStatement(sqlFindByEstado)) {
+            ps.setBoolean(1, status);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    salida.add(mapper(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return salida;
     }
 
     /* Helpers */
