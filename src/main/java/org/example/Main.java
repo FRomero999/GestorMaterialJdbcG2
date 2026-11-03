@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.data.DataSourceFactory;
+import org.example.data.DatabaseInitializer;
 import org.example.data.EquipoMysqlDAO;
 import org.example.models.Equipo;
 
@@ -14,11 +15,11 @@ public class Main {
     static void main() {
 
         var ds = DataSourceFactory.getDataSource();
+        DatabaseInitializer.initialize(ds);
+        DatabaseInitializer.initData(ds);
 
         var dao = new EquipoMysqlDAO(ds);
-
         dao.findAll().forEach(System.out::println);
-
 
     }
 }

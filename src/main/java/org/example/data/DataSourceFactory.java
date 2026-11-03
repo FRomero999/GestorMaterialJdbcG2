@@ -21,10 +21,10 @@ public class DataSourceFactory {
     private static String url = "jdbc:mysql://localhost:3307/ad";
 
     /** Nombre de usuario obtenido de la variable de entorno {@code USER}. */
-    private static String username = System.getenv("USER").trim() ;
+    private static String username = System.getenv("USER");
 
     /** Contraseña obtenida de la variable de entorno {@code PASSWORD}. */
-    private static String password = System.getenv("PASSWORD").trim() ;
+    private static String password = System.getenv("PASSWORD");
 
     /** Instancia única del {@link DataSource}, creada de forma perezosa. */
     private static DataSource dataSource = null;
@@ -38,13 +38,13 @@ public class DataSourceFactory {
      */
     public static DataSource getDataSource() {
         if(dataSource == null) {
-            if(username == null || password == null) {
+            if(username == null || password  == null) {
                 throw new RuntimeException("Username and/or password are mandatory");
             }
             MysqlDataSource ds = new MysqlDataSource();
             ds.setURL(url);
-            ds.setUser(username);
-            ds.setPassword(password);
+            ds.setUser(username.trim() );
+            ds.setPassword(password.trim() );
             dataSource=ds;
         }
         return dataSource;
