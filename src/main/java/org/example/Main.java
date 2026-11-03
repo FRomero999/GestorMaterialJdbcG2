@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.data.DataSourceFactory;
 import org.example.data.EquipoMysqlDAO;
 import org.example.models.Equipo;
 
@@ -12,14 +13,11 @@ public class Main {
 
     static void main() {
 
-        var dao = new EquipoMysqlDAO();
+        var ds = DataSourceFactory.getDataSource();
 
-        Long id = 10L;
+        var dao = new EquipoMysqlDAO(ds);
 
-        Optional<Equipo> e = dao.findById(id);
-        e.ifPresent(equipo -> {
-            dao.deleteById(equipo.getId());
-        });
+        dao.findAll().forEach(System.out::println);
 
 
     }
